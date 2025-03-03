@@ -10,6 +10,7 @@ class Actor {
     }
 
     update() {
+        this.acceleration.rotate(this.rotation);
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);
         this.acceleration.set(0, 0);
@@ -17,6 +18,7 @@ class Actor {
 
     draw() {
         push();
+        imageMode(CENTER);
         translate(this.position.x, this.position.y);
         rotate(this.rotation);
         image(this.sprite, 0, 0, this.size, this.size)
