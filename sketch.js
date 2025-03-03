@@ -3,10 +3,15 @@ let inputMap;
 
 let shipSprite;
 let bulletSprite;
+let asteroidSprites = [];
 
 function preload() {
   shipSprite = loadImage("assets/ship.png");
   bulletSprite = loadImage("assets/bullet.png");
+  asteroidSprites = [
+    loadImage("assets/asteroid-1.png"),
+    loadImage("assets/asteroid-2.png")
+  ];
 }
 
 function setup() {
@@ -20,9 +25,12 @@ function setup() {
   );
   gameManager = new GameManager();
   gameManager.spawnPlayer();
+  gameManager.spawnAsteroids(7);
 }
 
 function draw() {
   background(0);
   gameManager.update();
+  fill(255);
+  text(`lives: ${gameManager.lives}`, 5, 15)
 }

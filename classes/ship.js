@@ -5,10 +5,12 @@ class Ship extends Actor {
         this.thrustForce = 0.2;
         this.rotationForce = 0.05;
         this.velocityDecay = 0.97;
-        this.warpPressed = false;
+        this.warpPressed = true;
         this.shootPressed = false;
         this.bullets = [];
         this.bulletForce = 15;
+        this.invincibilityTimer = 0;
+        this.flickerFrame = false;
     }
 
     update() {
@@ -21,6 +23,19 @@ class Ship extends Actor {
             bullet.draw();
         }
         this.bullets = this.bullets.filter((bullet) => bullet.lifetime > 0);
+
+        if(this.invincibilityTimer > 0) {
+            this.invincibilityTimer -= deltaTime / 1000;
+        }
+    }
+
+    draw() {
+        if(this.flickerFrame) {
+            this.flickerFrame = false;
+            return;
+        }
+        if(this.invincibilityTimer > 0) this.flickerFrame = true;
+        super.draw();
     }
 
     checkInput() {

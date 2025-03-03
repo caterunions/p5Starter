@@ -55,4 +55,11 @@ class Actor {
     addRotation(rotation) {
         this.rotation += rotation;
     }
+
+    checkCollision(other) {
+        if(this.position.dist(other.position) <= this.collider.radius + other.collider.radius) {
+            return true;
+        }
+        return false;
+    }
 }
