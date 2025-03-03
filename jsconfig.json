@@ -3,5 +3,5 @@
     "*.js",
     "libraries/*.js",
 	"p5types/global.d.ts"
-  ]
+, "classes/actor.js", "classes/asteroid.js", "classes/bullet.js", "classes/collider.js", "classes/enemySaucer.js", "classes/gameManager.js", "classes/inputMappings.js", "classes/leaderboardSave.js", "classes/ship.js", "classes/spawner.js"  ]
 }
