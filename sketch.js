@@ -1,9 +1,12 @@
 let gameManager; 
-let shipSprite;
 let inputMap;
+
+let shipSprite;
+let bulletSprite;
 
 function preload() {
   shipSprite = loadImage("assets/ship.png");
+  bulletSprite = loadImage("assets/bullet.png");
 }
 
 function setup() {

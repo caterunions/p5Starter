@@ -5,26 +5,61 @@ class Ship extends Actor {
         this.thrustForce = 0.2;
         this.rotationForce = 0.05;
         this.velocityDecay = 0.97;
+        this.warpPressed = false;
+        this.shootPressed = false;
+        this.bullets = [];
+        this.bulletForce = 15;
     }
 
     update() {
         this.checkInput();
         super.update();
         this.velocity.mult(this.velocityDecay)
+
+        for(let bullet of this.bullets) {
+            bullet.update();
+            bullet.draw();
+        }
+        this.bullets = this.bullets.filter((bullet) => bullet.lifetime > 0);
     }
 
     checkInput() {
         if(keyIsDown(this.input.thrust)) {
-            super.addForce(createVector(0, -this.thrustForce));
+            this.addForce(createVector(0, -this.thrustForce));
         }
         if(keyIsDown(this.input.right)) {
-            super.addRotation(this.rotationForce);
+            this.addRotation(this.rotationForce);
         }
         if(keyIsDown(this.input.left)) {
-            super.addRotation(-this.rotationForce);
+            this.addRotation(-this.rotationForce);
         }
-        if(keyIsDown(this.input.warp)) {
+        if(keyIsDown(this.input.warp) && !this.warpPressed) {
+            this.position = createVector(random(0,width), random(0,height));
+            this.warpPressed = true;
+        }
+        else if(!keyIsDown(this.input.warp)) {
+            this.warpPressed = false;
+        }
+        if(keyIsDown(this.input.shoot) && !this.shootPressed) {
+            this.shoot();
+            this.shootPressed = true;
+        }
+        else if(!keyIsDown(this.input.shoot)) {
+            this.shootPressed = false;
+        }
+    }
 
-        }
+    shoot() {
+        this.bullets.push(new Bullet (
+            this.position.copy(),
+            this.rotation,
+            createVector(0, 0),
+            new Collider(3),
+            bulletSprite,
+            6,
+            this.bulletForce,
+            true,
+            1
+        ))
     }
 }
