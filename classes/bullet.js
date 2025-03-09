@@ -10,6 +10,5 @@ class Bullet extends Actor {
     update() {
         super.update();
         this.lifetime -= deltaTime / 1000;
-        console.log(this.lifetime);
     }
 }

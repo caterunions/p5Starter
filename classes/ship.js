@@ -65,6 +65,7 @@ class Ship extends Actor {
     }
 
     shoot() {
+        this.addForce(createVector(0,0.5))
         this.bullets.push(new Bullet (
             this.position.copy(),
             this.rotation,

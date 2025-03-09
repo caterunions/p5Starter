@@ -28,13 +28,21 @@ class GameManager {
 
             if(this.ship.invincibilityTimer <= 0 && asteroid.checkCollision(this.ship)) {
                 this.playerDie();
-                asteroid.markDead = true;
             }
 
             for(let bullet of this.ship.bullets) {
                 if(asteroid.checkCollision(bullet)) {
-                    asteroid.markDead = true;
                     bullet.lifetime = 0;
+                    asteroid.markDead = true;
+                }
+            }
+        }
+
+        for(let asteroid of this.asteroids) {
+            if(asteroid.markDead) {
+                asteroid.health--;
+                if(asteroid.health > 0) {
+                    this.spawnAsteroids(2, asteroid.health, asteroid.position.copy());
                 }
             }
         }
@@ -48,7 +56,7 @@ class GameManager {
         this.ship.invincibilityTimer = 2;
     }
 
-    spawnAsteroids(count) {
+    spawnLargeAsteroids(count) {
         for(let i = 0; i < count; i++) {
             let axis = floor(random(0,4))
             let spawnPos = createVector(0, 0);
@@ -72,7 +80,23 @@ class GameManager {
                 new Collider(32),
                 random(asteroidSprites),
                 64,
-                random(1,2)
+                1,
+                3
+            ))
+        }
+    }
+
+    spawnAsteroids(count, health, position) {
+        for(let i = 0; i < count; i++) {
+            this.asteroids.push(new Asteroid(
+                position.copy(),
+                random(0,PI),
+                createVector(0,0),
+                new Collider(12 * health),
+                random(asteroidSprites),
+                24 * health,
+                2.5 - health / 2,
+                health
             ))
         }
     }

@@ -25,7 +25,7 @@ function setup() {
   );
   gameManager = new GameManager();
   gameManager.spawnPlayer();
-  gameManager.spawnAsteroids(7);
+  gameManager.spawnLargeAsteroids(7);
 }
 
 function draw() {
