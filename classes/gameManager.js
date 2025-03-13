@@ -1,7 +1,9 @@
 class GameManager {
     constructor() {
         this.asteroids = [];
-        this.lives = 5;
+        this.lives = 3;
+        this.score = 0;
+        this.screenShakeFrames = 0;
     }
 
     spawnPlayer() {
@@ -16,7 +18,19 @@ class GameManager {
         )
     }
 
+    addScore(score) {
+        if((this.score % 10000) + score >= 10000) {
+            this.lives++;
+        }
+        this.score += score;
+    }
+
     update() {
+        push();
+        if(this.screenShakeFrames > 0) {
+            translate(random(-3,3), random(-3,3));
+            this.screenShakeFrames--;
+        }
         this.ship.update();
         this.ship.draw();
         //this.ship.debugDrawCollider();
@@ -27,6 +41,7 @@ class GameManager {
             //asteroid.debugDrawCollider();
 
             if(this.ship.invincibilityTimer <= 0 && asteroid.checkCollision(this.ship)) {
+                asteroid.markDead = true;
                 this.playerDie();
             }
 
@@ -44,16 +59,35 @@ class GameManager {
                 if(asteroid.health > 0) {
                     this.spawnAsteroids(2, asteroid.health, asteroid.position.copy());
                 }
+                switch(asteroid.health) {
+                    case 2:
+                        this.addScore(20);
+                        break;
+                    case 1:
+                        this.addScore(50);
+                        break;
+                    case 0:
+                        this.addScore(100);
+                        break;
+                }
+                this.screenShakeFrames = 5;
+                explosionSFX.play();
             }
         }
 
         this.asteroids = this.asteroids.filter((asteroid) => !asteroid.markDead);
+        pop();
     }
 
     playerDie() {
         this.lives --;
         this.spawnPlayer();
         this.ship.invincibilityTimer = 2;
+        this.screenShakeFrames = 5;
+
+        if(this.lives === 0) {
+            resetGame();
+        }
     }
 
     spawnLargeAsteroids(count) {

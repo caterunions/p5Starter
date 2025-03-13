@@ -41,6 +41,12 @@ class Ship extends Actor {
     checkInput() {
         if(keyIsDown(this.input.thrust)) {
             this.addForce(createVector(0, -this.thrustForce));
+            if(!engineSFX.isPlaying()) {
+                engineSFX.play();
+            }
+        }
+        else {
+            engineSFX.stop();
         }
         if(keyIsDown(this.input.right)) {
             this.addRotation(this.rotationForce);
@@ -51,6 +57,7 @@ class Ship extends Actor {
         if(keyIsDown(this.input.warp) && !this.warpPressed) {
             this.position = createVector(random(0,width), random(0,height));
             this.warpPressed = true;
+            warpSFX.play();
         }
         else if(!keyIsDown(this.input.warp)) {
             this.warpPressed = false;
@@ -58,6 +65,7 @@ class Ship extends Actor {
         if(keyIsDown(this.input.shoot) && !this.shootPressed) {
             this.shoot();
             this.shootPressed = true;
+            shootSFX.play();
         }
         else if(!keyIsDown(this.input.shoot)) {
             this.shootPressed = false;
