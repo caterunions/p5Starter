@@ -76,6 +76,11 @@ class GameManager {
         }
 
         this.asteroids = this.asteroids.filter((asteroid) => !asteroid.markDead);
+
+        if(this.asteroids.length === 0) {
+            this.spawnLargeAsteroids(7);
+        }
+
         pop();
     }
 
