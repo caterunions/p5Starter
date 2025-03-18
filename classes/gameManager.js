@@ -1,6 +1,7 @@
 class GameManager {
     constructor() {
         this.asteroids = [];
+        this.saucers = [];
         this.lives = 3;
         this.score = 0;
         this.screenShakeFrames = 0;
@@ -21,6 +22,9 @@ class GameManager {
     addScore(score) {
         if((this.score % 10000) + score >= 10000) {
             this.lives++;
+        }
+        if((this.score % 1000) + score >= 1000) {
+            this.spawnSaucer();
         }
         this.score += score;
     }
@@ -53,6 +57,39 @@ class GameManager {
             }
         }
 
+        for(let saucer of this.saucers) {
+            saucer.update();
+            saucer.draw();
+            //saucer.debugDrawCollider();
+
+            for(let asteroid of this.asteroids) {
+                if(asteroid.checkCollision(saucer)) {
+                    asteroid.markDead = true;
+                    saucer.markDead = true;
+                }
+                for(let bullet of saucer.bullets) {
+                    if(asteroid.checkCollision(bullet)) {
+                        bullet.lifetime = 0;
+                        asteroid.markDead = true;
+                    }
+                }
+            }
+
+            for(let bullet of this.ship.bullets) {
+                if(saucer.checkCollision(bullet)) {
+                    bullet.lifetime = 0;
+                    saucer.markDead = true;
+                }
+            }
+
+            for(let bullet of saucer.bullets) {
+                if(this.ship.invincibilityTimer <= 0 && bullet.checkCollision(this.ship)) {
+                    bullet.lifetime = 0;
+                    this.playerDie();
+                }
+            }
+        }
+
         for(let asteroid of this.asteroids) {
             if(asteroid.markDead) {
                 asteroid.health--;
@@ -75,7 +112,21 @@ class GameManager {
             }
         }
 
+        for(let saucer of this.saucers) {
+            if(saucer.markDead) {
+                if(saucer.size === 64) {
+                    this.addScore(200);
+                }
+                else {
+                    this.addScore(1000);
+                }
+                this.screenShakeFrames = 5;
+                explosionSFX.play();
+            }
+        }
+
         this.asteroids = this.asteroids.filter((asteroid) => !asteroid.markDead);
+        this.saucers = this.saucers.filter((saucer) => !saucer.markDead);
 
         if(this.asteroids.length === 0) {
             this.spawnLargeAsteroids(7);
@@ -97,23 +148,8 @@ class GameManager {
 
     spawnLargeAsteroids(count) {
         for(let i = 0; i < count; i++) {
-            let axis = floor(random(0,4))
-            let spawnPos = createVector(0, 0);
-
-            if(axis === 0) {
-                spawnPos.set(random(0, width), 0);
-            }
-            else if(axis === 1) {
-                spawnPos.set(random(0, width), height);
-            }
-            else if(axis === 2) {
-                spawnPos.set(0, random(0, height));
-            }
-            else if (axis === 3) {
-                spawnPos.set(width, random(0, height));
-            }
             this.asteroids.push(new Asteroid(
-                spawnPos,
+                this.pickScreenEdge(),
                 random(0,PI),
                 createVector(0,0),
                 new Collider(32),
@@ -121,7 +157,7 @@ class GameManager {
                 64,
                 1,
                 3
-            ))
+            ));
         }
     }
 
@@ -136,7 +172,53 @@ class GameManager {
                 24 * health,
                 2.5 - health / 2,
                 health
-            ))
+            ));
+        }
+    }
+
+    spawnSaucer() {
+        if(random() > 0.7) {
+            // small saucer
+            this.saucers.push(new EnemySaucer(
+                this.pickScreenEdge(),
+                0,
+                createVector(0,0),
+                new Collider(14),
+                saucerSprite,
+                32,
+                createVector(random(-1.5,1.5), random(-1.5,1.5)),
+                min(10, 10 / (this.score / 1000))
+            ));
+        }
+        else {
+            // large saucer
+            this.saucers.push(new EnemySaucer(
+                this.pickScreenEdge(),
+                0,
+                createVector(0,0),
+                new Collider(28),
+                saucerSprite,
+                64,
+                createVector(random(-1,1), random(-1,1)),
+                30
+            ));
+        }
+    }
+
+    pickScreenEdge() {
+        let axis = floor(random(0,4))
+
+        if(axis === 0) {
+            return createVector(random(0, width), 0);
+        }
+        else if(axis === 1) {
+            return createVector(random(0, width), height);
+        }
+        else if(axis === 2) {
+            return createVector(0, random(0, height));
+        }
+        else if (axis === 3) {
+            return createVector(width, random(0, height));
         }
     }
 }

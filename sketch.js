@@ -4,6 +4,7 @@ let inputMap;
 let shipSprite;
 let bulletSprite;
 let asteroidSprites = [];
+let saucerSprite;
 
 let shootSFX;
 let engineSFX;
@@ -18,6 +19,7 @@ function preload() {
     loadImage("assets/asteroid-1.png"),
     loadImage("assets/asteroid-2.png")
   ];
+  saucerSprite = loadImage("assets/saucer.png");
   shootSFX = loadSound("assets/shoot.wav");
   engineSFX = loadSound("assets/engine.wav");
   warpSFX = loadSound("assets/warp.wav");
