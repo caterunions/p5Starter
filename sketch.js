@@ -1,5 +1,11 @@
-let gameManager; 
+let gameManager = null; 
 let inputMap;
+let startBtn;
+let markForReset = false;
+let onLeaderboardScreen = false;
+let savedName = '';
+let savedScore;
+let leaderboard = [];
 
 let shipSprite;
 let bulletSprite;
@@ -28,8 +34,6 @@ function preload() {
 }
 
 function setup() {
-  bgmSFX.play();
-  bgmSFX.loop();
   createCanvas(800, 800);
   inputMap = new InputMappings(
     87,
@@ -38,18 +42,68 @@ function setup() {
     83,
     32
   );
-  resetGame();
+  startBtn = createButton('Start');
+  startBtn.position(width/2, height/2);
+  startBtn.mousePressed(resetGame);
+  leaderboard = getItem('leaderboard');
+  leaderboard.sort((a, b) => b.score - a.score);
+  if(leaderboard === null) {
+    leaderboard = [];
+  }
 }
 
 function draw() {
   background(0);
-  gameManager.update();
   fill(255);
-  text(`lives: ${gameManager.lives} score: ${gameManager.score}`, 5, 15)
+  if(markForReset) {
+    markForReset = false;
+    gameManager = null;
+  }
+  else if(onLeaderboardScreen) {
+    text(`ENTER NAME TO SAVE SCORE OF ${savedScore}: ${savedName}`, width/2, height/2);
+  }
+  if(gameManager != null) {
+    gameManager.update();
+    text(`lives: ${gameManager.lives} score: ${gameManager.score}`, 5, 15)
+  }
+  else if(!onLeaderboardScreen) {
+    text(`ASTEROIDS`, width/2, height/3);
+    let leaderboardString = 'LEADERBOARD:\n';
+    if(leaderboard != null) {
+      for(let entry of leaderboard) {
+        leaderboardString += `${entry.name}: ${entry.score}\n`;
+      }
+    }
+    text(leaderboardString, 50, 50);
+  }
 }
 
 function resetGame() {
   gameManager = new GameManager();
   gameManager.spawnPlayer();
   gameManager.spawnLargeAsteroids(7);
+  startBtn.hide();
+  bgmSFX.play();
+  bgmSFX.loop();
+}
+
+function endGame(finalScore) {
+  markForReset = true;
+  onLeaderboardScreen = true;
+  savedScore = finalScore;
+  bgmSFX.stop();
+}
+
+function keyPressed() {
+  if(onLeaderboardScreen) {
+    savedName += key;
+  }
+  if(savedName.length === 3) {
+    leaderboard.push(new LeaderboardSave(savedName, savedScore));
+    leaderboard.sort((a, b) => b.score - a.score);
+    storeItem('leaderboard', leaderboard);
+    onLeaderboardScreen = false;
+    startBtn.show();
+    savedName = '';
+  }
 }

@@ -2,6 +2,7 @@ class GameManager {
     constructor() {
         this.asteroids = [];
         this.saucers = [];
+        this.particles = [];
         this.lives = 3;
         this.score = 0;
         this.screenShakeFrames = 0;
@@ -35,10 +36,16 @@ class GameManager {
             translate(random(-3,3), random(-3,3));
             this.screenShakeFrames--;
         }
+
+        for(let particle of this.particles) {
+            particle.update();
+            particle.draw();
+        }
+
         this.ship.update();
         this.ship.draw();
-        //this.ship.debugDrawCollider();
 
+        //this.ship.debugDrawCollider();
         for(let asteroid of this.asteroids) {
             asteroid.update();
             asteroid.draw();
@@ -109,6 +116,7 @@ class GameManager {
                 }
                 this.screenShakeFrames = 5;
                 explosionSFX.play();
+                this.spawnParticle(15,asteroid.position,0,TWO_PI,1,3,1,3,0.2,0.5);
             }
         }
 
@@ -127,6 +135,7 @@ class GameManager {
 
         this.asteroids = this.asteroids.filter((asteroid) => !asteroid.markDead);
         this.saucers = this.saucers.filter((saucer) => !saucer.markDead);
+        this.particles = this.particles.filter((particle) => particle.lifetime > 0);
 
         if(this.asteroids.length === 0) {
             this.spawnLargeAsteroids(7);
@@ -136,13 +145,14 @@ class GameManager {
     }
 
     playerDie() {
+        this.spawnParticle(30,this.ship.position,0,TWO_PI,3,5,1,3,0.7,1.5);
         this.lives --;
         this.spawnPlayer();
         this.ship.invincibilityTimer = 2;
         this.screenShakeFrames = 5;
-
+  
         if(this.lives === 0) {
-            resetGame();
+            endGame(this.score);
         }
     }
 
@@ -219,6 +229,21 @@ class GameManager {
         }
         else if (axis === 3) {
             return createVector(width, random(0, height));
+        }
+    }
+
+    spawnParticle(count, pos, minRot, maxRot, minSize, maxSize, minSpeed, maxSpeed, minLife, maxLife) {
+        for(let i = 0; i < count; i++) {
+            this.particles.push(new Particle(
+                pos.copy(),
+                random(minRot, maxRot),
+                createVector(0,0),
+                new Collider(0),
+                bulletSprite,
+                random(minSize, maxSize),
+                random(minSpeed, maxSpeed),
+                random(minLife, maxLife)
+            ));
         }
     }
 }

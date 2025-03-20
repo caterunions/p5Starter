@@ -41,6 +41,7 @@ class Ship extends Actor {
     checkInput() {
         if(keyIsDown(this.input.thrust)) {
             this.addForce(createVector(0, -this.thrustForce));
+            gameManager.spawnParticle(1,this.position, this.rotation + PI + 0.1, this.rotation + PI - 0.1, 2, 4, 1, 2, 0.5, 1);
             if(!engineSFX.isPlaying()) {
                 engineSFX.play();
             }
