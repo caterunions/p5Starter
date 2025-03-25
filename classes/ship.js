@@ -5,7 +5,9 @@ class Ship extends Actor {
         this.input = input;
         // move speed
         this.thrustForce = 0.2;
+        // rotation
         this.rotationForce = 0.05;
+        // deceleration
         this.velocityDecay = 0.97;
         this.warpPressed = true;
         this.shootPressed = false;
