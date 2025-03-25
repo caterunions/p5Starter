@@ -119,7 +119,7 @@ function keyPressed() {
     savedName = '';
   }
   if(paused) {
-    
+    // make powerup selection
     if(key === "1" || key === "2" || key === "3") {
       paused = false;
       gameManager.powerups[parseInt(key) - 1].activate();
