@@ -69,8 +69,10 @@ function draw() {
     gameManager.update();
     text(`LIVES: ${gameManager.lives} SCORE: ${gameManager.score}`, 5, 15)
   }
+  // draw title screen
   else if(!onLeaderboardScreen) {
     text(`ASTEROIDS`, width/2, height/3);
+    // draw leaderboard
     let leaderboardString = 'LEADERBOARD:\n';
     if(leaderboard != null) {
       for(let entry of leaderboard) {
@@ -79,12 +81,14 @@ function draw() {
     }
     text(leaderboardString, 50, 50);
   }
+  // draw powerup message
   if(paused) {
     text(`PRESS KEYS 1-3 TO MAKE POWERUP SELECTION`, width/2 - 150, height/3);
   }
 }
 
 function resetGame() {
+  // clean gamemanager
   gameManager = new GameManager();
   gameManager.spawnPlayer();
   gameManager.spawnLargeAsteroids(gameManager.levelDifficulty);
