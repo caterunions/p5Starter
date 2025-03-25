@@ -1,6 +1,7 @@
 class Ship extends Actor {
     constructor(position, rotation, velocity, collider, sprite, size, input) {
         super(position, rotation, velocity, collider, sprite, size);
+        // input mappings
         this.input = input;
         this.thrustForce = 0.2;
         this.rotationForce = 0.05;
