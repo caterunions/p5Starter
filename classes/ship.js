@@ -17,6 +17,7 @@ class Ship extends Actor {
         // i frames
         this.invincibilityTimer = 0;
         this.flickerFrame = false;
+        // powerup variables
         this.multishot = 1;
         this.bulletPierce = 1;
         this.bulletLifetime = 1;
