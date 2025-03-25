@@ -60,9 +60,11 @@ function draw() {
     markForReset = false;
     gameManager = null;
   }
+  // draw name save text
   else if(onLeaderboardScreen) {
     text(`ENTER NAME TO SAVE SCORE OF ${savedScore}: ${savedName}`, width/2, height/2);
   }
+  // draw lives and score
   if(gameManager != null) {
     gameManager.update();
     text(`LIVES: ${gameManager.lives} SCORE: ${gameManager.score}`, 5, 15)
