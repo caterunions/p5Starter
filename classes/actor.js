@@ -46,6 +46,7 @@ class Actor {
 
     debugDrawCollider() {
         push();
+        // draw circle to represent collider size
         translate(this.position.x, this.position.y);
         stroke(0, 255, 0);
         fill(0, 0);
