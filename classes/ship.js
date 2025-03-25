@@ -92,7 +92,9 @@ class Ship extends Actor {
     }
 
     shoot() {
+        // calculate bullet spread
         let angleOffset = (this.multishot / 2) * (PI / 16) * -1;
+        // spawn bullets
         for(let i = 0; i < this.multishot; i++) {
             this.bullets.push(new Bullet (
                 this.position.copy(),
