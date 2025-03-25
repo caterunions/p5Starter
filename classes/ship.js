@@ -108,8 +108,10 @@ class Ship extends Actor {
                 this.bulletLifetime,
                 this.bulletPierce
             ));
+            // increase shot angle
             angleOffset += (PI / 16);
         }
+        // knockback force
         this.addForce(createVector(0,0.5));
     }
 }
