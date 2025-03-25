@@ -9,10 +9,12 @@ class Ship extends Actor {
         this.rotationForce = 0.05;
         // deceleration
         this.velocityDecay = 0.97;
+        // saving input
         this.warpPressed = true;
         this.shootPressed = false;
         this.bullets = [];
         this.bulletForce = 15;
+        // i frames
         this.invincibilityTimer = 0;
         this.flickerFrame = false;
         this.multishot = 1;
