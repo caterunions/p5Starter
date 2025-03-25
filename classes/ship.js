@@ -3,6 +3,7 @@ class Ship extends Actor {
         super(position, rotation, velocity, collider, sprite, size);
         // input mappings
         this.input = input;
+        // move speed
         this.thrustForce = 0.2;
         this.rotationForce = 0.05;
         this.velocityDecay = 0.97;
