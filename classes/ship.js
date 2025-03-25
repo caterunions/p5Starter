@@ -11,9 +11,15 @@ class Ship extends Actor {
         this.bulletForce = 15;
         this.invincibilityTimer = 0;
         this.flickerFrame = false;
+        this.multishot = 1;
+        this.bulletPierce = 1;
+        this.bulletLifetime = 1;
     }
 
     update() {
+        if(paused) {
+            return;
+        }
         this.checkInput();
         super.update();
         this.velocity.mult(this.velocityDecay)
@@ -74,17 +80,22 @@ class Ship extends Actor {
     }
 
     shoot() {
-        this.addForce(createVector(0,0.5))
-        this.bullets.push(new Bullet (
-            this.position.copy(),
-            this.rotation,
-            createVector(0, 0),
-            new Collider(3),
-            bulletSprite,
-            6,
-            this.bulletForce,
-            true,
-            1
-        ))
+        let angleOffset = (this.multishot / 2) * (PI / 16) * -1;
+        for(let i = 0; i < this.multishot; i++) {
+            this.bullets.push(new Bullet (
+                this.position.copy(),
+                this.rotation + angleOffset,
+                createVector(0, 0),
+                new Collider(3),
+                bulletSprite,
+                6,
+                this.bulletForce,
+                true,
+                this.bulletLifetime,
+                this.bulletPierce
+            ));
+            angleOffset += (PI / 16);
+        }
+        this.addForce(createVector(0,0.5));
     }
 }

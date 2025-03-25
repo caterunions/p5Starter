@@ -3,9 +3,11 @@ class GameManager {
         this.asteroids = [];
         this.saucers = [];
         this.particles = [];
+        this.powerups = [];
         this.lives = 3;
         this.score = 0;
         this.screenShakeFrames = 0;
+        this.levelDifficulty = 5;
     }
 
     spawnPlayer() {
@@ -42,6 +44,10 @@ class GameManager {
             particle.draw();
         }
 
+        for(let powerup of this.powerups) {
+            powerup.draw();
+        }
+
         this.ship.update();
         this.ship.draw();
 
@@ -58,7 +64,10 @@ class GameManager {
 
             for(let bullet of this.ship.bullets) {
                 if(asteroid.checkCollision(bullet)) {
-                    bullet.lifetime = 0;
+                    bullet.pierce--;
+                    if(bullet.pierce <= 0) {
+                        bullet.lifetime = 0;
+                    }
                     asteroid.markDead = true;
                 }
             }
@@ -84,7 +93,10 @@ class GameManager {
 
             for(let bullet of this.ship.bullets) {
                 if(saucer.checkCollision(bullet)) {
-                    bullet.lifetime = 0;
+                    bullet.pierce--;
+                    if(bullet.pierce <= 0) {
+                        bullet.lifetime = 0;
+                    }
                     saucer.markDead = true;
                 }
             }
@@ -138,10 +150,19 @@ class GameManager {
         this.particles = this.particles.filter((particle) => particle.lifetime > 0);
 
         if(this.asteroids.length === 0) {
-            this.spawnLargeAsteroids(7);
+            this.incrementLevel();
         }
 
         pop();
+    }
+
+    incrementLevel() {
+        paused = true;
+        this.levelDifficulty++;
+        this.spawnLargeAsteroids(this.levelDifficulty);
+        this.powerups.push(new Powerup(createVector(width/2 - 100,height/2)));
+        this.powerups.push(new Powerup(createVector(width/2,height/2)));
+        this.powerups.push(new Powerup(createVector(width/2 + 100,height/2)));
     }
 
     playerDie() {

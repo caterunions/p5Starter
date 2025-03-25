@@ -8,6 +8,9 @@ class Particle extends Actor {
 
     update() {
         super.update();
+        if(paused) {
+            return;
+        }
         this.lifetime -= deltaTime / 1000;
     }
 }

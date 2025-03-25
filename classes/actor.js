@@ -10,6 +10,9 @@ class Actor {
     }
 
     update() {
+        if(paused) {
+            return;
+        }
         this.acceleration.rotate(this.rotation);
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);

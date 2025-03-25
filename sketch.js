@@ -6,6 +6,7 @@ let onLeaderboardScreen = false;
 let savedName = '';
 let savedScore;
 let leaderboard = [];
+let paused = false;
 
 let shipSprite;
 let bulletSprite;
@@ -46,10 +47,10 @@ function setup() {
   startBtn.position(width/2, height/2);
   startBtn.mousePressed(resetGame);
   leaderboard = getItem('leaderboard');
-  leaderboard.sort((a, b) => b.score - a.score);
   if(leaderboard === null) {
     leaderboard = [];
   }
+  leaderboard.sort((a, b) => b.score - a.score);
 }
 
 function draw() {
@@ -64,7 +65,7 @@ function draw() {
   }
   if(gameManager != null) {
     gameManager.update();
-    text(`lives: ${gameManager.lives} score: ${gameManager.score}`, 5, 15)
+    text(`LIVES: ${gameManager.lives} SCORE: ${gameManager.score}`, 5, 15)
   }
   else if(!onLeaderboardScreen) {
     text(`ASTEROIDS`, width/2, height/3);
@@ -76,12 +77,15 @@ function draw() {
     }
     text(leaderboardString, 50, 50);
   }
+  if(paused) {
+    text(`PRESS KEYS 1-3 TO MAKE POWERUP SELECTION`, width/2 - 150, height/3);
+  }
 }
 
 function resetGame() {
   gameManager = new GameManager();
   gameManager.spawnPlayer();
-  gameManager.spawnLargeAsteroids(7);
+  gameManager.spawnLargeAsteroids(gameManager.levelDifficulty);
   startBtn.hide();
   bgmSFX.play();
   bgmSFX.loop();
@@ -105,5 +109,13 @@ function keyPressed() {
     onLeaderboardScreen = false;
     startBtn.show();
     savedName = '';
+  }
+  if(paused) {
+    
+    if(key === "1" || key === "2" || key === "3") {
+      paused = false;
+      gameManager.powerups[parseInt(key) - 1].activate();
+      gameManager.powerups = [];
+    }
   }
 }

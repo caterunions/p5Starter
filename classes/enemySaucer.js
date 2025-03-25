@@ -10,6 +10,9 @@ class EnemySaucer extends Actor {
 
     update() {
         super.update();
+        if(paused) {
+            return;
+        }
         if((frameCount + this.shootOffset) % 160 === 0) {
             this.shoot();
         }
@@ -41,7 +44,8 @@ class EnemySaucer extends Actor {
             6,
             10,
             false,
-            1.5
+            1.5,
+            1
         ))
     }
 }
