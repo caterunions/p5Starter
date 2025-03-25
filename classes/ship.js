@@ -80,6 +80,7 @@ class Ship extends Actor {
         else if(!keyIsDown(this.input.warp)) {
             this.warpPressed = false;
         }
+        // shoot
         if(keyIsDown(this.input.shoot) && !this.shootPressed) {
             this.shoot();
             this.shootPressed = true;
