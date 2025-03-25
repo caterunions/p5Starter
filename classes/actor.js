@@ -13,6 +13,7 @@ class Actor {
         if(paused) {
             return;
         }
+        // physics yo
         this.acceleration.rotate(this.rotation);
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);
