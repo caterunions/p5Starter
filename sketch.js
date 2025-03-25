@@ -105,9 +105,11 @@ function endGame(finalScore) {
 }
 
 function keyPressed() {
+  // type saved name
   if(onLeaderboardScreen) {
     savedName += key;
   }
+  // save score if name has 3 characters
   if(savedName.length === 3) {
     leaderboard.push(new LeaderboardSave(savedName, savedScore));
     leaderboard.sort((a, b) => b.score - a.score);
