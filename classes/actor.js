@@ -63,6 +63,7 @@ class Actor {
     }
 
     checkCollision(other) {
+        //compare collider distances
         if(this.position.dist(other.position) <= this.collider.radius + other.collider.radius) {
             return true;
         }
