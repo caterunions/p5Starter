@@ -45,6 +45,7 @@ class Ship extends Actor {
     }
 
     draw() {
+        // flicker every other frame when invincible
         if(this.flickerFrame) {
             this.flickerFrame = false;
             return;
