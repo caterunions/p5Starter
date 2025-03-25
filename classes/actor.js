@@ -36,6 +36,7 @@ class Actor {
 
     draw() {
         push();
+        // draw sprite
         imageMode(CENTER);
         translate(this.position.x, this.position.y);
         rotate(this.rotation);
