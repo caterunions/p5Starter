@@ -35,8 +35,10 @@ class Ship extends Actor {
             bullet.update();
             bullet.draw();
         }
+        // remove dead bullets
         this.bullets = this.bullets.filter((bullet) => bullet.lifetime > 0);
 
+        // use up invincibility frames
         if(this.invincibilityTimer > 0) {
             this.invincibilityTimer -= deltaTime / 1000;
         }
